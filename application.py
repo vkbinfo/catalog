@@ -1,13 +1,13 @@
 #!/usr/bin/python
 
-from flask import Flask, render_template, request, redirect, jsonify, url_for, \
-    flash
+from flask import Flask, render_template, request, redirect, jsonify,\
+    url_for, flash
 from flask import session as login_session, g
 
 from flask_login import LoginManager, login_user, logout_user, current_user, \
     login_required
-import random, string
-
+import random
+import string
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import Base, Category, CategoryItem, User
@@ -167,7 +167,8 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;' \
+              '-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
     return output
 
@@ -336,10 +337,8 @@ def deleteCategory(category_id):
         else:
             return redirect(url_for('index'))
 
-    return render_template('DeleteCategory.html',
-                               category_object = category_obj, login=True)
-
-
+    return render_template('DeleteCategory.html', category_object=category_obj,
+                           login=True)
 
 
 # CRUD operations on category items of a category.
@@ -460,8 +459,8 @@ def deleteItemInCategory(category_id, item_id):
             return redirect(url_for('index'))
     item_obj = session.query(CategoryItem).filter_by(id=item_id).first()
     return render_template('DeleteCategoryItem.html',
-                               item_object=item_obj, login=True)
-
+                           item_object=item_obj,
+                           login=True)
 
 
 # API endpoints
@@ -494,13 +493,16 @@ def info_category_item(category_id, item_id):
     item = session.query(CategoryItem).filter_by(id=item_id).first()
     return jsonify(itemInfo=item.serialize)
 
+
 @app.route('/users')
 def info():
-    users=session.query(User).all()
-    user_list=[]
+    users = session.query(User).all()
+    user_list = []
     for user in users:
         user_list.append(user.serialize)
     return jsonify(users=user_list)
+
+
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
     app.debug = True
