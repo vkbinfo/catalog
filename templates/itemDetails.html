@@ -1,0 +1,12 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+<h2 class="item_name">{{item.name}}</h2>
+<h4 class="item_description">{{item.description}}</h4>
+{% if can_edit_item %}
+<a href="{{url_for('editItemInCategory',
+    category_id = item.category_id,item_id=item.id)}}">Edit</a>
+<a href="{{url_for('deleteItemInCategory',
+    category_id = item.category_id,item_id=item.id)}}">Delete</a>
+{% endif %}
+{%endblock%}

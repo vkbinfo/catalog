@@ -1,0 +1,70 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+
+<div class = 'flash'>
+		      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+
+</div>
+
+	<div class="row">
+
+		<div class="col-md-4 heightFull" >
+
+
+
+
+	{% for category in categories %}
+		<a href = "{{url_for('itemsInCategory', category_id = category.id)}}">
+			<div class="row">
+					<div class="col-md-4">
+						<h3>{{category.name}}</h3>
+					</div>
+			</div>
+		</a>
+	{% endfor %}
+		<a href="{{url_for('newCategory')}}">
+				<button class="btn btn-default" id="new-category">
+					<span class="glyphicon" aria-hidden="true"></span>Add Category
+				</button>
+			</a>
+			</div>
+		<div class="col-mod-8">
+			<h3>{{categoryObj.name}}</h3>
+				{% if can_add_item%}
+
+					<a href="{{url_for('editCategory',
+					category_id=categoryObj.id)}}" class="category_options">
+						<h4>Update Name</h4></a>
+
+					<a href="{{url_for('deleteCategory',
+					category_id=categoryObj.id)}}" class="category_options">
+						<h4>Delete Category</h4></a>
+
+					<a href="{{url_for('newItemInCategory',
+					category_id=categoryObj.id)}}" class="category_options">
+					    <h4>Add Item</h4></a>
+
+				{%endif%}
+							{% for item in items %}
+			<a href = "{{url_for('itemDescription',
+			category_id=item.category_id, item_id = item.id)}}">
+						<div>
+							<h2>{{item.name}}</h2>
+						</div>
+			</a>
+			{% endfor %}
+
+		</div>
+		</div>
+
+{% endblock %}

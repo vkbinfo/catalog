@@ -1,0 +1,10 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+<h3>Do you really want to delete this awesome Category Item-
+    {{item_object.name}}?</h3>
+<form method="post">
+<input type="submit" name="submit" value="Delete">
+<input type="submit" name="submit" value="Cancel">
+    </form>
+{%endblock%}

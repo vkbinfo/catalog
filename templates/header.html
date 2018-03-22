@@ -1,0 +1,17 @@
+<h1 class="site_heading">Category_Items </h1>
+<div class="row ">
+	<div class="col-md-6">
+		<a href="{{url_for('index')}}">
+			<span class="" aria-hidden="true"></span>HOME
+		</a>
+	</div>
+	<div class="col-md-6 text-right">
+					{% if login %}
+					<a href="{{url_for('logout')}}"><p>logout</p></a>
+					{%endif%}
+					{% if not login %}
+					<a href="{{url_for('login')}}"><p>login</p></a>
+					{%endif%}
+
+	</div>
+</div>
