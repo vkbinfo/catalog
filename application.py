@@ -208,10 +208,10 @@ def signup():
 def login():
     if request.method == 'POST' and \
             login_session['state'] == request.form['state']:
-        username = request.form['username']
+        email = request.form['email']
         password = request.form['password']
         try:
-            userObj = session.query(User).filter_by(username=username).first()
+            userObj = session.query(User).filter_by(email=email).first()
         except:
             flash("user doesn't exist")
             state = ''.join(
@@ -221,7 +221,8 @@ def login():
             return render_template('login.html', STATE=state)
         if userObj and userObj.verify_password(password):
             flash("You have successfully signed up.")
-            login_session['username'] = username
+            login_session['username'] = userObj.username
+            login_session['email'] = userObj.email
             login_user(userObj)
             return redirect(url_for('index'))
         else:
@@ -315,6 +316,10 @@ def editCategory(category_id):
 @login_required
 def deleteCategory(category_id):
     """deletes a category in database"""
+    category_obj = session.query(Category).filter_by(id=category_id).first()
+    if category_obj.user_id != current_user.id:
+        flash("You need to be owner of the Category to Delete it.")
+        return redirect(url_for('index'))
     if request.method == 'POST':
         if request.form['submit'] == "Delete":
             category_obj = session.query(Category).filter_by(
@@ -330,13 +335,11 @@ def deleteCategory(category_id):
             return redirect(url_for('index'))
         else:
             return redirect(url_for('index'))
-    category_obj = session.query(Category).filter_by(id=category_id).first()
-    if category_obj.user_id == current_user.id:
-        return render_template('DeleteCategory.html',
-                               category_object=category_obj, login=True)
-    else:
-        flash("You need to be owner of the Category to Delete it.")
-        return redirect(url_for('index'))
+
+    return render_template('DeleteCategory.html',
+                               category_object = category_obj, login=True)
+
+
 
 
 # CRUD operations on category items of a category.
@@ -368,9 +371,7 @@ def itemDescription(category_id, item_id):
         print(login_session['username'])
         user_id = session.query(User).filter_by(
             email=login_session.get('email')).first().id
-        print(user_id)
     itemObj = session.query(CategoryItem).filter_by(id=item_id).first()
-    print(itemObj.user_id)
     if itemObj.user_id == user_id:
         can_edit_item = True
     print(can_edit_item)
@@ -384,6 +385,11 @@ def itemDescription(category_id, item_id):
 def newItemInCategory(category_id):
     """creates a new item in a category in database."""
     if request.method == 'POST':
+        category_obj = session.query(Category).filter_by(
+            id=category_id).first()
+        if category_obj.user_id != current_user.id:
+            flash("You need to be owner of the Category to Add into it it.")
+            return redirect(url_for('index'))
         name = request.form['name']
         description = request.form['description']
         category_id = request.form['category_id']
@@ -408,11 +414,15 @@ def newItemInCategory(category_id):
 @login_required
 def editItemInCategory(category_id, item_id):
     """Updates a item in a category in database"""
+    category_obj = session.query(Category).filter_by(
+        id=category_id).first()
+    if category_obj.user_id != current_user.id:
+        flash("You need to be owner of the Category to edit this item")
+        return redirect(url_for('index'))
     if request.method == "POST":
         if request.form['submit'] == 'Edit':
             item_obj = session.query(CategoryItem).filter_by(
                 id=item_id).first()
-            print(item_obj)
             item_obj.name = request.form['name']
             item_obj.description = request.form['description']
             session.add(item_obj)
@@ -433,6 +443,11 @@ def editItemInCategory(category_id, item_id):
 @login_required
 def deleteItemInCategory(category_id, item_id):
     """deletes a item in a category in database"""
+    category_obj = session.query(Category).filter_by(
+        id=category_id).first()
+    if category_obj.user_id != current_user.id:
+        flash("You need to be owner of the Category to Delete it.")
+        return redirect(url_for('index'))
     if request.method == 'POST':
         if request.form['submit'] == "Delete":
             item_obj = session.query(CategoryItem).filter_by(
@@ -444,12 +459,9 @@ def deleteItemInCategory(category_id, item_id):
         else:
             return redirect(url_for('index'))
     item_obj = session.query(CategoryItem).filter_by(id=item_id).first()
-    if item_obj.user_id == current_user.id:
-        return render_template('DeleteCategoryItem.html',
+    return render_template('DeleteCategoryItem.html',
                                item_object=item_obj, login=True)
-    else:
-        flash("You need to be owner of the Category to Delete it.")
-        return redirect(url_for('index'))
+
 
 
 # API endpoints
@@ -482,7 +494,13 @@ def info_category_item(category_id, item_id):
     item = session.query(CategoryItem).filter_by(id=item_id).first()
     return jsonify(itemInfo=item.serialize)
 
-
+@app.route('/users')
+def info():
+    users=session.query(User).all()
+    user_list=[]
+    for user in users:
+        user_list.append(user.serialize)
+    return jsonify(users=user_list)
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
     app.debug = True

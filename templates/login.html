@@ -23,28 +23,42 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 login">
-    <form action="{{url_for('login')}}" method="post">
-        <div class="form-group">
-            <input type="hidden" value="{{STATE}}" name="state">
-            <label for="username">username:</label>
-            <input type="text" class="form-control" maxlength="100"
-                   name="username">
-            <br>
-            <label for="password">password:</label>
-            <input type="password" class="form-control" maxlength="100"
-                   name="password">
-            <br>
-            <button type="submit" class="btn btn-default" id="submit">
-                <span class="glyphicon " aria-hidden="true"></span>Log In
-            </button>
+             <!--flash messages for information-->
+        <div class='flash'>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
 
+            <ul>
+                {% for message in messages %}
+                <li><strong> {{ message }} </strong></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
         </div>
-    </form>
+            <form action="{{url_for('login')}}" method="post">
+                <div class="form-group">
+                    <input type="hidden" value="{{STATE}}" name="state">
+                    <label for="email">Email:</label>
+                    <input type="text" class="form-control" maxlength="100"
+                           name="email">
+                    <br>
+                    <label for="password">password:</label>
+                    <input type="password" class="form-control" maxlength="100"
+                           name="password">
+                    <br>
+                    <button type="submit" class="btn btn-default" id="submit">
+                        <span class="glyphicon " aria-hidden="true"></span>Log
+                        In
+                    </button>
 
-    <!-- GOOGLE PLUS SIGN IN-->
+                </div>
+            </form>
 
-    <div>
-        <div id="signinButton">
+            <!-- GOOGLE PLUS SIGN IN-->
+
+            <div>
+                <div id="signinButton">
           <span class="g-signin"
                 data-scope="openid email"
                 data-clientid="575334475222-jp8jmuvk13k67aek18sig53dececue27.apps.googleusercontent.com"
@@ -54,13 +68,13 @@
                 data-callback="signInCallback"
                 data-approvalprompt="force">
           </span>
-        </div>
-        <a href="{{url_for('signup')}}"
-           style="display:inline-block;"><h4>Sign Up</h4></a>
-    </div>
-    <div id="result"></div>
+                </div>
+                <a href="{{url_for('signup')}}"
+                   style="display:inline-block;"><h4>Sign Up</h4></a>
+            </div>
+            <div id="result"></div>
 
-    <script>
+            <script>
 function signInCallback(authResult) {
   if (authResult['code']) {
 
@@ -97,28 +111,15 @@ function signInCallback(authResult) {
 
   }); } }
 
-    </script>
+
+            </script>
 
 
-    <!--END GOOGLE PLUS SIGN IN -->
+            <!--END GOOGLE PLUS SIGN IN -->
 
-    <!--flash messages for information-->
-    <div class='flash'>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-
-        <ul>
-            {% for message in messages %}
-            <li><strong> {{ message }} </strong></li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
-
-    </div>
-</div>
         </div>
     </div>
+</div>
 </body>
 
 </html>
