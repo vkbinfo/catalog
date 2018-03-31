@@ -21,7 +21,7 @@ class User(UserMixin, Base):
     username = Column(String(32), index=True)
     picture = Column(String)
     email = Column(String, unique=True)
-    password_hash = Column(String(64))
+    password_hash = Column(String(500))
 
     def hash_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
