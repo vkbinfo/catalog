@@ -1,9 +1,9 @@
-# Udacity Catalog_Backend Project
+# Udacity Catalog_Backend Project part of Full Stack Web Developer Nanodegree.
 ## Necessary Steps:-
-1. First run models.py to set up database and tables.
-2. Second run application.py to start the server and to see how my application
-    works
-3. Go to localhost:5000 to do all these follow operation.(plase use domain name localhost otherwise google oauth will reject your request.)
+1. Install all the dependencies for this project with pip from requirement.txt file. by using this command:- $pip install -r requirements.txt
+2. First run models.py to set up database and tables.use command:$python models.py
+3. Second run application.py to start the server and to see how my application works.use command: $python models.py
+4. Go to localhost:5000 to do all these follow operation.(plase use domain name localhost otherwise google oauth will reject your request.)
 
 ## Web routes for different operation:-
 
